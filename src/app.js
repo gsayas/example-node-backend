@@ -1,27 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {sequelize, Op} = require('./model')
-const {getProfile} = require('./middleware/getProfile')
+const {getProfile} = require('./middleware/getProfile');
+const {handleGetContract} = require('./contracts.api');
+const {handlePostJob} = require('./jobs.api');
 const app = express();
 app.use(bodyParser.json());
 app.set('sequelize', sequelize)
 app.set('models', sequelize.models)
 
-app.get('/contracts/:id', getProfile ,async (req, res) =>{
-    const {Contract} = req.app.get('models')
-    const {id} = req.params
+app.get('/contracts/:id', getProfile, handleGetContract);
+app.post('/jobs/:job_id/pay', getProfile, handlePostJob);
 
-    const contract = await Contract.findOne({
-        where: {
-            id,
-            [Op.or]: [
-                { ContractorId: req.profile.id },
-                { ClientId: req.profile.id }
-            ]
-        }
-    });
-
-    if(!contract) return res.status(404).end()
-    res.json(contract)
-})
 module.exports = app;
