@@ -1,6 +1,7 @@
 async function depositToBalanceUseCase(balanceRepository, userId, amount) {
-    const client = await balanceRepository.getUserWithJobsToPay(userId);
+    const client = await balanceRepository.getClientById(userId);
     if (!client) throw new Error('User not found');
+    if (amount <= 0) throw new Error('Invalid deposit amount');
 
     const totalToPay = await balanceRepository.totalJobsToPay(client.id);
     if (!totalToPay) throw new Error('No jobs to pay');

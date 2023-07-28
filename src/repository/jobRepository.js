@@ -1,4 +1,4 @@
-const { sequelize, Profile, Job, Contract } = require('./../model');
+const { sequelize, Profile, Job, Contract } = require('../model');
 
 class JobRepository {
     async findJobWithContract(jobId) {
