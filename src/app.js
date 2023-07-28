@@ -5,6 +5,7 @@ const {getProfile} = require('./middleware/getProfile');
 const {handleGetContract} = require('./api/contracts.api');
 const {handlePostJob} = require('./api/jobs.api');
 const {handleBalanceDeposit} = require('./api/balances.api');
+const {handleGetBestProfession} = require('./api/admin.api');
 const app = express();
 app.use(bodyParser.json());
 app.set('sequelize', sequelize)
@@ -15,5 +16,7 @@ app.get('/contracts/:id', getProfile, handleGetContract);
 app.post('/jobs/:job_id/pay', getProfile, handlePostJob);
 
 app.post('/balances/deposit/:userId', handleBalanceDeposit);
+
+app.get('/admin/best-profession', handleGetBestProfession);
 
 module.exports = app;

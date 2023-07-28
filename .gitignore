@@ -3,4 +3,5 @@ node_modules
 database.sqlite3
 
 .idea
+.idea/*
 *.http

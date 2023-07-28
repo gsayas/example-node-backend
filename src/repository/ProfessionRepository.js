@@ -1,19 +1,19 @@
-const { Op } = require('sequelize');
+const { sequelize, Job, Contract, Profile, Op } = require('../model');
+const Sequelize = require('sequelize');
+
 
 class ProfessionRepository {
-    constructor(models) {
-        this.models = models;
-    }
 
     async getBestProfessions(start, end) {
-        const result = await this.models.Job.findAll({
-            attributes: ['Contractor.profession', [this.models.sequelize.fn('SUM', this.models.sequelize.col('price')), 'earnings']],
+        console.log('at getBestProfessions')
+        const result = await Job.findAll({
+            attributes: [[Sequelize.col('Contract.Contractor.profession'), 'profession'], [sequelize.fn('SUM', sequelize.col('price')), 'earnings']],
             include: [{
-                model: this.models.Contract,
+                model: Contract,
                 as: 'Contract',
                 include: [
                     {
-                        model: this.models.Profile,
+                        model: Profile,
                         as: 'Contractor',
                         attributes: []
                     }
@@ -25,12 +25,17 @@ class ProfessionRepository {
                 },
                 paid: true
             },
-            group: ['Contractor.profession'],
-            order: [[this.models.sequelize.literal('earnings'), 'DESC']]
+            group: [Sequelize.col('Contract.Contractor.profession')],
+            order: [[sequelize.literal('earnings'), 'DESC']],
+            limit: 1
         });
 
+        console.log('at getBestProfessions after query')
+
         // Converting raw sequelize response to regular JS objects
-        return result.map(r => r.get({ plain: true }));
+        const plainResult = result.map(r => r.get({ plain: true }));
+
+        return plainResult[0] || {};
     }
 }
 
