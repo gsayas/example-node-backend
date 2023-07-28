@@ -1,36 +1,19 @@
 async function payForJobUseCase(jobRepository, jobId, profileId) {
-    await jobRepository.beginTransaction();
 
     try {
+        await jobRepository.beginTransaction();
+
         const job = await jobRepository.findJobWithContract(jobId);
-        console.log('the job', job);
+        if (!job) throw new Error('Job not found');
 
-        if (!job) {
-            console.log('NOJOB-ERROR', job);
-            await jobRepository.rollbackTransaction();
-            throw new Error('Job not found');
-        }
-
-        if (job.paid) {
-            console.log('PAIDJOB-ERROR', job);
-            await jobRepository.rollbackTransaction();
-            throw new Error('Job has already been paid');
-        }
+        if (job.paid) throw new Error('Job has already been paid');
 
         const client = job.Contract.Client;
         const contractor = job.Contract.Contractor;
 
-        if (client.id !== profileId) {
-            console.log('WRONGCLIENT-ERROR', job);
-            await jobRepository.rollbackTransaction();
-            throw new Error('User does not have permission to pay for this job');
-        }
+        if (client.id !== profileId) throw new Error('User does not have permission to pay for this job');
 
-        if (client.balance < job.price) {
-            console.log('BALANCE-ERROR', job);
-            await jobRepository.rollbackTransaction();
-            throw new Error('Insufficient balance');
-        }
+        if (client.balance < job.price) throw new Error('Insufficient balance');
 
         client.balance -= job.price;
         contractor.balance += job.price;
@@ -44,10 +27,9 @@ async function payForJobUseCase(jobRepository, jobId, profileId) {
         await jobRepository.commitTransaction();
 
         return job;
-    } catch (err) {
-        console.log('GENERIC-ERROR', job);
+    } catch (error) {
         await jobRepository.rollbackTransaction();
-        throw err;
+        throw error;
     }
 }
 

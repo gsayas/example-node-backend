@@ -45,5 +45,66 @@ describe('payForJobUseCase', () => {
         expect(mockJobRepository.saveProfile).toHaveBeenCalledTimes(2);
     });
 
-    // Add more tests to handle other scenarios such as "Job not found", "Insufficient balance", etc.
+    it('should not pay for a non-existing job', async () => {
+        mockJobRepository.findJobWithContract.mockResolvedValue(null);
+
+        await expect(payForJobUseCase(mockJobRepository, 1, 1)).rejects.toThrow('Job not found');
+
+        expect(mockJobRepository.beginTransaction).toHaveBeenCalledTimes(1);
+        expect(mockJobRepository.findJobWithContract).toHaveBeenCalledWith(1);
+        expect(mockJobRepository.rollbackTransaction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not pay for a job if client balance is insufficient', async () => {
+        const mockJob = {
+            id: 1,
+            price: 100,
+            paid: false,
+            Contract: {
+                Client: {
+                    id: 1,
+                    balance: 50, // insufficient balance
+                },
+                Contractor: {
+                    id: 2,
+                    balance: 0,
+                },
+            },
+        };
+
+        mockJobRepository.findJobWithContract.mockResolvedValue(mockJob);
+
+        await expect(payForJobUseCase(mockJobRepository, 1, 1)).rejects.toThrow('Insufficient balance');
+
+        expect(mockJobRepository.beginTransaction).toHaveBeenCalledTimes(1);
+        expect(mockJobRepository.findJobWithContract).toHaveBeenCalledWith(1);
+        expect(mockJobRepository.rollbackTransaction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not pay for a job if it has already been paid', async () => {
+        const mockJob = {
+            id: 1,
+            price: 100,
+            paid: true, // job has already been paid
+            Contract: {
+                Client: {
+                    id: 1,
+                    balance: 200,
+                },
+                Contractor: {
+                    id: 2,
+                    balance: 0,
+                },
+            },
+        };
+
+        mockJobRepository.findJobWithContract.mockResolvedValue(mockJob);
+
+        await expect(payForJobUseCase(mockJobRepository, 1, 1)).rejects.toThrow('Job has already been paid');
+
+        expect(mockJobRepository.beginTransaction).toHaveBeenCalledTimes(1);
+        expect(mockJobRepository.findJobWithContract).toHaveBeenCalledWith(1);
+        expect(mockJobRepository.rollbackTransaction).toHaveBeenCalledTimes(1);
+    });
+
 });
