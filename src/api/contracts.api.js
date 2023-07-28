@@ -1,4 +1,4 @@
-const {Op} = require("./model");
+const {Op} = require("../model");
 
 async function handleGetContract(req, res) {
     const {Contract} = req.app.get('models')
