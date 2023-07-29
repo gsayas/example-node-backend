@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {sequelize} = require('./model')
 const {getProfile} = require('./middleware/getProfile');
-const {handleGetContract} = require('./api/contracts.api');
+const {handleGetContract, handleGetContracts} = require('./api/contracts.api');
 const {handlePostJob} = require('./api/jobs.api');
 const {handleBalanceDeposit} = require('./api/balances.api');
 const {handleGetBestProfession} = require('./api/admin.api');
@@ -12,6 +12,7 @@ app.set('sequelize', sequelize)
 app.set('models', sequelize.models)
 
 app.get('/contracts/:id', getProfile, handleGetContract);
+app.get('/contracts', getProfile, handleGetContracts);
 
 app.post('/jobs/:job_id/pay', getProfile, handlePostJob);
 

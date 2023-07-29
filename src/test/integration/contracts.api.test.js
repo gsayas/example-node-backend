@@ -37,3 +37,17 @@ describe('GET /contracts/:id', () => {
         expect(response.statusCode).toBe(404);
     });
 });
+
+
+describe('GET /contracts', () => {
+    test('should return non-terminated (open) contracts for user', async () => {
+        const userId = 1;
+
+        const response = await request(app)
+            .get('/contracts')
+            .set('profile_id', userId);
+
+        expect(response.status).toBe(200);
+        expect(response.body.some(c => c.status === 'terminated')).toBe(false);
+    });
+});

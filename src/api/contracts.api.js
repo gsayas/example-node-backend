@@ -1,4 +1,6 @@
 const {Op} = require("../model");
+const getContractsUseCase = require('../usecase/getContractsUseCase');
+const ContractsRepository = require('../repository/ContractsRepository');
 
 async function handleGetContract(req, res) {
     const {Contract} = req.app.get('models')
@@ -18,6 +20,18 @@ async function handleGetContract(req, res) {
     res.json(contract)
 }
 
+async function handleGetContracts(req, res) {
+    const contractsRepository = new ContractsRepository();
+
+    try {
+        const contracts = await getContractsUseCase(contractsRepository, req.profile.id);
+        res.json(contracts);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = {
-    handleGetContract
+    handleGetContract,
+    handleGetContracts
 };
