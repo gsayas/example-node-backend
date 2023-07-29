@@ -1,20 +1,13 @@
 const {Op} = require("../model");
 const getContractsUseCase = require('../usecase/getContractsUseCase');
+const getContractDetailsUseCase = require('../usecase/getContractDetailsUseCase');
 const ContractsRepository = require('../repository/ContractsRepository');
 
 async function handleGetContract(req, res) {
     const {Contract} = req.app.get('models')
     const {id} = req.params
 
-    const contract = await Contract.findOne({
-        where: {
-            id,
-            [Op.or]: [
-                { ContractorId: req.profile.id },
-                { ClientId: req.profile.id }
-            ]
-        }
-    });
+    const contract = await getContractDetailsUseCase(Contract, id, req);
 
     if(!contract) return res.status(404).end()
     res.json(contract)
