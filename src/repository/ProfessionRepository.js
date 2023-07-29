@@ -5,7 +5,6 @@ const Sequelize = require('sequelize');
 class ProfessionRepository {
 
     async getBestProfessions(start, end) {
-        console.log('at getBestProfessions')
         const result = await Job.findAll({
             attributes: [[Sequelize.col('Contract.Contractor.profession'), 'profession'], [sequelize.fn('SUM', sequelize.col('price')), 'earnings']],
             include: [{
@@ -29,8 +28,6 @@ class ProfessionRepository {
             order: [[sequelize.literal('earnings'), 'DESC']],
             limit: 1
         });
-
-        console.log('at getBestProfessions after query')
 
         // Converting raw sequelize response to regular JS objects
         const plainResult = result.map(r => r.get({ plain: true }));

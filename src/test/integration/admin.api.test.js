@@ -51,3 +51,23 @@ describe('GET /admin/best-clients', () => {
         expect(response.body).toHaveProperty('error');
     });
 });
+
+
+describe('/best-profession endpoint', () => {
+    it('should return the profession with highest total earnings in a given date range', async () => {
+        const start = '2020-01-01';
+        const end = '2023-12-31';
+
+        const response = await request(app)
+            .get(`/admin/best-profession?start=${start}&end=${end}`)
+            .expect(200);
+
+        const profession = response.body;
+        expect(profession).toHaveProperty('profession');
+        expect(profession).toHaveProperty('earnings');
+
+        // With isolated integration tests, I could also add more specific assertions to the response, for example:
+        // expect(profession.profession).toBe('Plumber');
+        // expect(profession.earnings).toBe(5000);
+    });
+});
