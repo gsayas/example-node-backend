@@ -1,4 +1,4 @@
-const JobRepository = require('../repository/jobRepository');
+const JobRepository = require('../repository/JobRepository');
 
 async function getUnpaidJobsUseCase(userId) {
     const jobRepository = new JobRepository();

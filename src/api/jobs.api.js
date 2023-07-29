@@ -1,6 +1,6 @@
 const payForJobUseCase = require('../usecase/payForJobUseCase');
 const getUnpaidJobsUseCase = require('../usecase/getUnpaidJobsUseCase');
-const JobRepository = require('../repository/jobRepository');
+const JobRepository = require('../repository/JobRepository');
 
 async function handlePostJob(req, res) {
     const { job_id } = req.params;

@@ -1,5 +1,5 @@
 const depositToBalanceUseCase = require('../usecase/depositToBalanceUseCase');
-const BalanceRepository = require('../repository/balanceRepository');
+const BalanceRepository = require('../repository/BalanceRepository');
 
 const balanceRepository = new BalanceRepository();
 
