@@ -1,4 +1,5 @@
 const payForJobUseCase = require('../usecase/payForJobUseCase');
+const getUnpaidJobsUseCase = require('../usecase/getUnpaidJobsUseCase');
 const JobRepository = require('../repository/jobRepository');
 
 async function handlePostJob(req, res) {
@@ -13,6 +14,19 @@ async function handlePostJob(req, res) {
     }
 }
 
+async function handleGetUnpaidJobs(req, res) {
+    const userId = req.profile.id;
+
+    try {
+        const jobs = await getUnpaidJobsUseCase(userId);
+        res.json(jobs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
 module.exports = {
-    handlePostJob
+    handlePostJob,
+    handleGetUnpaidJobs
 };
