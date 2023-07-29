@@ -1,7 +1,5 @@
-const BestClientsRepository = require('../repository/BestClientsRepository');
 
-async function getBestClientsUseCase(start, end, limit = 2) {
-    const bestClientsRepository = new BestClientsRepository();
+async function getBestClientsUseCase(bestClientsRepository, start, end, limit = 2) {
 
     if (new Date(end) <= new Date(start)) {
         throw new Error('End date must be greater than start date');

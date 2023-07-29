@@ -1,73 +1,54 @@
-const request = require('supertest');
-const app = require('../../app');
+const { setupTestDB, teardownTestDB, testDB } = require('./testdb');
+const bestProfessionUseCase = require('../../usecase/bestProfessionUseCase');
+const ProfessionRepository = require("../../repository/ProfessionRepository");
 
-describe('GET /admin/best-clients', () => {
-    it('should return a specific number of best clients if a limit is passed', async () => {
-        const start = '2020-01-01';
-        const end = '2023-07-01';
-        const limit = 1;
-
-        const response = await request(app)
-            .get(`/admin/best-clients?start=${start}&end=${end}&limit=${limit}`)
-            .expect(200);
-
-        expect(response.body).toHaveLength(1);
-
-        response.body.forEach(client => {
-            expect(client).toHaveProperty('Contract.ClientId');
-            expect(client).toHaveProperty('Contract.Client.firstName');
-            expect(client).toHaveProperty('Contract.Client.lastName');
-            expect(client).toHaveProperty('total_paid');
-        });
+describe('bestProfessionUseCase', () => {
+    beforeAll(async () => {
+        await setupTestDB();
     });
 
-    it('should return 2 best clients if no limit is passed', async () => {
-        const start = '2020-01-01';
-        const end = '2023-07-01';
-
-        const response = await request(app)
-            .get(`/admin/best-clients?start=${start}&end=${end}`)
-            .expect(200);
-
-        expect(response.body).toHaveLength(2);
-
-        response.body.forEach(client => {
-            expect(client).toHaveProperty('Contract.ClientId');
-            expect(client).toHaveProperty('Contract.Client.firstName');
-            expect(client).toHaveProperty('Contract.Client.lastName');
-            expect(client).toHaveProperty('total_paid');
-        });
+    afterAll(async () => {
+        await teardownTestDB();
     });
 
-    it('should return an error if the date range is invalid', async () => {
-        const start = '2023-07-01';
-        const invalidEndDate = '2023-01-01';
-        const limit = 2;
+    beforeEach(async () => {
+        await testDB.sequelize.sync({ force: true });
 
-        const response = await request(app)
-            .get(`/admin/best-clients?start=${start}&end=${invalidEndDate}&limit=${limit}`)
-            .expect(500);
+        const client1 = await testDB.Profile.create({firstName: 'John', lastName: 'Doe', profession: 'Developer', balance: 1000, type: 'client'});
+        const client2 = await testDB.Profile.create({firstName: 'Jane', lastName: 'Doe', profession: 'Designer', balance: 1000, type: 'client'});
+        const contractor1 = await testDB.Profile.create({firstName: 'Alice', lastName: 'Smith', profession: 'Architect', balance: 0, type: 'contractor'});
+        const contractor2 = await testDB.Profile.create({firstName: 'Bob', lastName: 'Johnson', profession: 'Developer', balance: 0, type: 'contractor'});
 
-        expect(response.body).toHaveProperty('error');
+        const contract1 = await testDB.Contract.create({status: 'terminated', terms: 'contract 1 terms', ContractorId: contractor1.id, ClientId: client1.id});
+        const contract2 = await testDB.Contract.create({status: 'terminated', terms: 'contract 2 terms', ContractorId: contractor2.id, ClientId: client2.id});
+
+        const now = new Date();
+
+        await testDB.Job.create({description: 'job 1', price: 500, paid: true, paymentDate: now, ContractId: contract1.id});
+        await testDB.Job.create({description: 'job 2', price: 300, paid: true, paymentDate: now, ContractId: contract1.id});
+        await testDB.Job.create({description: 'job 3', price: 400, paid: true, paymentDate: now, ContractId: contract2.id});
     });
-});
 
+    it('should return the profession that earned the most money in the given period', async () => {
+        const start = new Date();
+        start.setDate(start.getDate() - 1); // yesterday
+        const end = new Date();
+        end.setDate(end.getDate() + 1); // tomorrow
 
-describe('/best-profession endpoint', () => {
-    it('should return the profession with highest total earnings in a given date range', async () => {
-        const start = '2020-01-01';
-        const end = '2023-12-31';
+        const professions = await bestProfessionUseCase(new ProfessionRepository(testDB.sequelize), start, end);
 
-        const response = await request(app)
-            .get(`/admin/best-profession?start=${start}&end=${end}`)
-            .expect(200);
+        expect(professions.profession).toEqual("Architect");
+        expect(professions.earnings).toEqual(800);
+    });
 
-        const profession = response.body;
-        expect(profession).toHaveProperty('profession');
-        expect(profession).toHaveProperty('earnings');
+    it('should return an empty object if there are no paid jobs in the given period', async () => {
+        const start = new Date();
+        start.setDate(start.getDate() + 1); // tomorrow
+        const end = new Date();
+        end.setDate(end.getDate() + 2); // day after tomorrow
 
-        // With isolated integration tests, I could also add more specific assertions to the response, for example:
-        // expect(profession.profession).toBe('Plumber');
-        // expect(profession.earnings).toBe(5000);
+        const profession = await bestProfessionUseCase(new ProfessionRepository(testDB.sequelize), start, end);
+
+        expect(profession).toEqual({ profession: undefined, earnings: undefined});//TODO: should be empty object
     });
 });

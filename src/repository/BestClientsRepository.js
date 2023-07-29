@@ -1,10 +1,14 @@
-const { sequelize, Job, Contract, Profile, Op } = require('../model');
+const { Job, Contract, Profile, Op } = require('../model');
 
 class BestClientsRepository {
 
+    constructor(sequelize) {
+        this.sequelize = sequelize;
+    }
+
     async getBestClients(start, end, limit) {
         const result = await Job.findAll({
-            attributes: ['Contract.ClientId', [sequelize.fn('SUM', sequelize.col('price')), 'total_paid']],
+            attributes: ['Contract.ClientId', [this.sequelize.fn('SUM', this.sequelize.col('price')), 'total_paid']],
             include: [{
                 model: Contract,
                 as: 'Contract',
@@ -23,7 +27,7 @@ class BestClientsRepository {
                 paid: true
             },
             group: ['Contract.ClientId', 'Contract.Client.firstName', 'Contract.Client.lastName', 'Contract.Client.id'],
-            order: [[sequelize.literal('total_paid'), 'DESC']],
+            order: [[this.sequelize.literal('total_paid'), 'DESC']],
             limit: limit
         });
 

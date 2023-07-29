@@ -1,12 +1,17 @@
-const { sequelize, Job, Contract, Profile, Op } = require('../model');
+const { Job, Contract, Profile, Op } = require('../model');
 const Sequelize = require('sequelize');
 
 
 class ProfessionRepository {
 
+    //constructor that takes in the sequelize instance
+    constructor(sequelize) {
+        this.sequelize = sequelize;
+    }
+
     async getBestProfessions(start, end) {
         const result = await Job.findAll({
-            attributes: [[Sequelize.col('Contract.Contractor.profession'), 'profession'], [sequelize.fn('SUM', sequelize.col('price')), 'earnings']],
+            attributes: [[Sequelize.col('Contract.Contractor.profession'), 'profession'], [this.sequelize.fn('SUM', this.sequelize.col('price')), 'earnings']],
             include: [{
                 model: Contract,
                 as: 'Contract',
@@ -22,10 +27,10 @@ class ProfessionRepository {
                 paymentDate: {
                     [Op.between]: [start, end]
                 },
-                paid: true
+                paid: 1
             },
             group: [Sequelize.col('Contract.Contractor.profession')],
-            order: [[sequelize.literal('earnings'), 'DESC']],
+            order: [[this.sequelize.literal('earnings'), 'DESC']],
             limit: 1
         });
 

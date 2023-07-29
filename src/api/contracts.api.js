@@ -1,20 +1,19 @@
-const {Op} = require("../model");
 const getContractsUseCase = require('../usecase/getContractsUseCase');
 const getContractDetailsUseCase = require('../usecase/getContractDetailsUseCase');
 const ContractsRepository = require('../repository/ContractsRepository');
 
 async function handleGetContract(req, res) {
-    const {Contract} = req.app.get('models')
+    const contractsRepository = new ContractsRepository(req.app.get('sequelize'));
     const {id} = req.params
 
-    const contract = await getContractDetailsUseCase(Contract, id, req);
+    const contract = await getContractDetailsUseCase(contractsRepository, id, req.profile.id);
 
     if(!contract) return res.status(404).end()
     res.json(contract)
 }
 
 async function handleGetContracts(req, res) {
-    const contractsRepository = new ContractsRepository();
+    const contractsRepository = new ContractsRepository(req.app.get('sequelize'));
 
     try {
         const contracts = await getContractsUseCase(contractsRepository, req.profile.id);

@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const {sequelize} = require('./model')
+const sequelize = require('./config/prod');
 const {getProfile} = require('./middleware/getProfile');
 const {handleGetContract, handleGetContracts} = require('./api/contracts.api');
 const {handlePostJob, handleGetUnpaidJobs} = require('./api/jobs.api');

@@ -1,10 +1,13 @@
-const { sequelize, Profile, Job, Contract, Op } = require('../model');
+const { Op } = require('../model');
 
 class JobRepository {
+    constructor(sequelize) {
+        this.sequelize = sequelize;
+    }
     async getUnpaidJobsForUser(userId) {
-        return await Job.findAll({
+        return await this.sequelize.models.Job.findAll({
             include: [{
-                model: Contract,
+                model: this.sequelize.models.Contract,
                 as: 'Contract',
                 where: {
                     status: 'in_progress',
@@ -14,11 +17,11 @@ class JobRepository {
                     ]
                 },
                 include: [{
-                    model: Profile,
+                    model: this.sequelize.models.Profile,
                     as: 'Contractor',
                     attributes: []
                 },{
-                    model: Profile,
+                    model: this.sequelize.models.Profile,
                     as: 'Client',
                     attributes: []
                 }]
@@ -29,14 +32,14 @@ class JobRepository {
         });
     }
     async findJobWithContract(jobId) {
-        return await Job.findOne({
+        return await this.sequelize.models.Job.findOne({
             where: { id: jobId },
             include: {
-                model: Contract,
+                model: this.sequelize.models.Contract,
                 as: 'Contract',
                 include: [
-                    { model: Profile, as: 'Client' },
-                    { model: Profile, as: 'Contractor' }
+                    { model: this.sequelize.models.Profile, as: 'Client' },
+                    { model: this.sequelize.models.Profile, as: 'Contractor' }
                 ]
             }
         });
@@ -50,7 +53,7 @@ class JobRepository {
         return await profile.save();
     }
     async beginTransaction() {
-        this.transaction = await sequelize.transaction();
+        this.transaction = await this.sequelize.transaction();
     }
 
     async commitTransaction() {

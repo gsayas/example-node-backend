@@ -1,15 +1,7 @@
 const {Op} = require("../model");
 
-function getContractDetailsUseCase(Contract, id, req) {
-    return Contract.findOne({
-        where: {
-            id,
-            [Op.or]: [
-                {ContractorId: req.profile.id},
-                {ClientId: req.profile.id}
-            ]
-        }
-    });
+function getContractDetailsUseCase(contractsRepository, userId, profileId) {
+    return contractsRepository.getContractDetails(userId, profileId);
 }
 
 module.exports = getContractDetailsUseCase;

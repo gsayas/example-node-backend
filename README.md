@@ -1,5 +1,13 @@
 # DEEL BACKEND TASK
 
+* I added a few tests to the project, having more time I would add more tests.
+* Regarding the repo structure, one alternative would be to have separate sub-contexts (jobs, contracts, admin, balances) each with a similar structure (api, repository, domain, usecase). This could be useful if the project grows and we want to split the codebase into separate microservices. I would like to discuss this as well.
+* In a real project I would also pay more attention to the error handling and logging. For example, return specific errors and codes for different types of errors, instead of just returning 500 for everything.
+
+<br />
+*****************************************************************************
+
+
 💫 Welcome! 🎉
 
 This backend exercise involves building a Node.js/Express.js app that will serve a REST API. We imagine you should spend around 3 hours at implement this feature.
