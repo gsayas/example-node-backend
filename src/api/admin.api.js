@@ -1,4 +1,5 @@
 const bestProfessionUseCase = require('../usecase/bestProfessionUseCase');
+const getBestClientsUseCase = require('../usecase/getBestClientsUseCase');
 const ProfessionRepository = require('../repository/professionRepository');
 
 async function handleGetBestProfession(req, res) {
@@ -13,6 +14,18 @@ async function handleGetBestProfession(req, res) {
     }
 }
 
+async function handleGetBestClients(req, res) {
+    const { start, end, limit } = req.query;
+
+    try {
+        const bestClients = await getBestClientsUseCase(start, end, limit);
+        res.json(bestClients);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = {
-    handleGetBestProfession
+    handleGetBestProfession,
+    handleGetBestClients
 };
