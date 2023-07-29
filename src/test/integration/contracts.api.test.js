@@ -2,10 +2,6 @@ const request = require('supertest');
 const app = require('../../app');
 
 describe('GET /contracts/:id', () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
-
     it('should return a contract if the user is the contractor', async () => {
 
         const response = await request(app)
