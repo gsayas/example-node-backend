@@ -1,6 +1,6 @@
 const bestProfessionUseCase = require('../usecase/bestProfessionUseCase');
 const getBestClientsUseCase = require('../usecase/getBestClientsUseCase');
-const ProfessionRepository = require('../repository/professionRepository');
+const ProfessionRepository = require('../repository/ProfessionRepository');
 const BestClientsRepository = require("../repository/BestClientsRepository");
 
 async function handleGetBestProfession(req, res) {

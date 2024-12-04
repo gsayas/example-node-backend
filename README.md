@@ -1,16 +1,8 @@
-# DEEL BACKEND TASK
-
-* I added a few tests to the project, having more time I would add more tests.
-* Regarding the repo structure, one alternative would be to have separate sub-contexts (jobs, contracts, admin, balances) each with a similar structure (api, repository, domain, usecase). This could be useful if the project grows and we want to split the codebase into separate microservices. I would like to discuss this as well.
-* In a real project I would also pay more attention to the error handling and logging. For example, return specific errors and codes for different types of errors, instead of just returning 500 for everything.
-
-<br />
-*****************************************************************************
-
+# Example Backend with Node/Express + Sequelize
 
 💫 Welcome! 🎉
 
-This backend exercise involves building a Node.js/Express.js app that will serve a REST API. We imagine you should spend around 3 hours at implement this feature.
+This is a exmaple of a backend built with Node.js/Express.js that will serve a REST API.
 
 ## Data Models
 
@@ -34,17 +26,12 @@ contractor get paid for jobs by clients under a certain contract.
 
 ## Getting Set Up
 
-The exercise requires [Node.js](https://nodejs.org/en/) to be installed. We recommend using the LTS version.
+1. Clone the repo and install the dependencies.
 
-1. Start by creating a local repository for this folder.
+2. `npm run seed` will seed the local SQLite database. **Warning: This will drop the database if it exists**. The database lives in a local file `database.sqlite3`.
 
-1. In the repo root directory, run `npm install` to gather all dependencies.
+3. Then run `npm start` which should start both the server and the React client.
 
-1. Next, `npm run seed` will seed the local SQLite database. **Warning: This will drop the database if it exists**. The database lives in a local file `database.sqlite3`.
-
-1. Then run `npm start` which should start both the server and the React client.
-
-❗️ **Make sure you commit all changes to the master branch!**
 
 ## Technical Notes
 
@@ -55,7 +42,7 @@ The exercise requires [Node.js](https://nodejs.org/en/) to be installed. We reco
 - To authenticate users use the `getProfile` middleware that is located under src/middleware/getProfile.js. users are authenticated by passing `profile_id` in the request header. after a user is authenticated his profile will be available under `req.profile`. make sure only users that are on the contract can access their contracts.
 - The server is running on port 3001.
 
-## APIs To Implement
+## APIs
 
 Below is a list of the required API's for the application.
 
@@ -93,14 +80,9 @@ Below is a list of the required API's for the application.
 ]
 ```
 
-## Going Above and Beyond the Requirements
+## Notes
 
-Given the time expectations of this exercise, we don't expect anyone to submit anything super fancy, but if you find yourself with extra time, any extra credit item(s) that showcase your unique strengths would be awesome! 🙌
 
-It would be great for example if you'd write some unit test / simple frontend demostrating calls to your fresh APIs.
-
-## Submitting the Assignment
-
-When you have finished the assignment, zip your repo (make sure to include .git folder) and send us the zip.
-
-Thank you and good luck! 🙏
+* I added a few tests to the project, having more time I would add more tests.
+* Regarding the repo structure, one alternative would be to have separate sub-contexts (jobs, contracts, admin, balances) each with a similar structure (api, repository, domain, usecase). This could be useful if the project grows and we want to split the codebase into separate microservices. I would like to discuss this as well.
+* In a real project I would also pay more attention to the error handling and logging. For example, return specific errors and codes for different types of errors, instead of just returning 500 for everything.
