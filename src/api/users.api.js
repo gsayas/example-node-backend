@@ -10,10 +10,17 @@ async function handleGetUsers(req, res) {
 }
 
 function getUsers() {
-    return [
-        { username: 'john', email: 'john@test.com' },
-        { username: 'jane', email: 'jane@test.com' },
-    ];
+    let users = [];
+
+    // delay 1 second (1000ms)
+    setTimeout(() => {
+        users = [
+            { username: 'john', email: 'john@test.com' },
+            { username: 'jane', email: 'jane@test.com' },
+        ];
+    }, 3000);
+
+    return users;
 }
 
 module.exports = {
