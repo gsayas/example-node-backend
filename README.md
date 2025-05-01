@@ -2,7 +2,7 @@
 
 💫 Welcome! 🎉
 
-This is a exmaple of a backend built with Node.js/Express.js that will serve a REST API.
+This is a example of a backend built with Node.js/Express.js that will serve a REST API.
 
 ## Data Models
 
@@ -80,7 +80,5 @@ contractor get paid for jobs by clients under a certain contract.
 
 ## Notes
 
-
-* I added a few tests to the project, having more time I would add more tests.
-* Regarding the repo structure, one alternative would be to have separate sub-contexts (jobs, contracts, admin, balances) each with a similar structure (api, repository, domain, usecase). This could be useful if the project grows and we want to split the codebase into separate microservices. I would like to discuss this as well.
+* Regarding the repo structure, one alternative would be to have separate sub-contexts (jobs, contracts, admin, balances) each with a similar structure (api, repository, domain, usecase). This could be useful if the project grows and we want to split the codebase into separate microservices.
 * In a real project I would also pay more attention to the error handling and logging. For example, return specific errors and codes for different types of errors, instead of just returning 500 for everything.
