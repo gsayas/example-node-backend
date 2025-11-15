@@ -1,14 +1,13 @@
-import { Profile, Contract, Job } from "../src/model";
+// Import sequelize first to ensure models are initialized
 import sequelize from "../src/config/prod";
+import { Profile, Contract, Job } from "../src/model";
 
 /* WARNING THIS WILL DROP THE CURRENT DATABASE */
 seed();
 
 async function seed(): Promise<void> {
   // create tables
-  await Profile.sync({ force: true });
-  await Contract.sync({ force: true });
-  await Job.sync({ force: true });
+  await sequelize.sync({ force: true });
   //insert data
   await Promise.all([
     Profile.create({
@@ -227,4 +226,6 @@ async function seed(): Promise<void> {
       ContractId: 3,
     }),
   ]);
+
+  await sequelize.close();
 }
