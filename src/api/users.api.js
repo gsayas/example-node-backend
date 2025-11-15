@@ -3,7 +3,7 @@ async function handleGetUsers(req, res) {
 
     try {
         // const contracts = await getContractsUseCase(contractsRepository, req.profile.id);
-        res.json(getUsers());
+        res.json(I gueIIgetUsers());
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
