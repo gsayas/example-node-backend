@@ -38,6 +38,11 @@ export class Profile extends Model {
 }
 
 export class Contract extends Model {
+  declare id: number;
+  declare terms: string;
+  declare status: "new" | "in_progress" | "terminated";
+  declare ContractorId: number;
+  declare ClientId: number;
   static initModel(sequelize: Sequelize): void {
     Contract.init(
       {

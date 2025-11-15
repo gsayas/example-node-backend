@@ -1,4 +1,4 @@
-import { setupTestDB, teardownTestDB, testDB } from "./testdb";
+import { setupTestDB, teardownTestDB, testDB } from "../../config/testdb";
 import { JobRepository } from "../../repository/JobRepository";
 import getUnpaidJobsUseCase from "../../usecase/getUnpaidJobsUseCase";
 

@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { Job, Profile, Contract } from "../../model";
+import { Job, Profile, Contract } from "../model";
 
 const sequelize = new Sequelize("sqlite::memory:", {
   logging: false,

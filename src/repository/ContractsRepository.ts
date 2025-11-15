@@ -1,5 +1,5 @@
 import { Sequelize, Transaction } from "sequelize";
-import { Op } from "../model";
+import { Op, Contract } from "../model";
 
 export class ContractsRepository {
   private sequelize: Sequelize;
@@ -8,13 +8,16 @@ export class ContractsRepository {
     this.sequelize = sequelize;
   }
 
-  async getContractDetails(userId: string | number, profileId: number) {
-    return await this.sequelize.models.Contract.findOne({
+  async getContractDetails(
+    userId: string | number,
+    profileId: number
+  ): Promise<Contract | null> {
+    return (await this.sequelize.models.Contract.findOne({
       where: {
         id: userId,
         [Op.or]: [{ ContractorId: profileId }, { ClientId: profileId }],
       },
-    });
+    })) as Contract | null;
   }
 
   async getOpenContractsForUser(userId: number) {

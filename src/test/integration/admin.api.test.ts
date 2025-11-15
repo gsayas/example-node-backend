@@ -1,4 +1,4 @@
-import { setupTestDB, teardownTestDB, testDB } from "./testdb";
+import { setupTestDB, teardownTestDB, testDB } from "../../config/testdb";
 import bestProfessionUseCase from "../../usecase/bestProfessionUseCase";
 import { ProfessionRepository } from "../../repository/ProfessionRepository";
 

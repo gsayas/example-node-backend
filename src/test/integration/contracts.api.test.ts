@@ -1,4 +1,4 @@
-import { setupTestDB, teardownTestDB, testDB } from "./testdb";
+import { setupTestDB, teardownTestDB, testDB } from "../../config/testdb";
 import { ContractsRepository } from "../../repository/ContractsRepository";
 import getContractDetailsUseCase from "../../usecase/getContractDetailsUseCase";
 import getContractsUseCase from "../../usecase/getContractsUseCase";

@@ -27,7 +27,7 @@ export class BalanceRepository {
       where: {
         paid: null,
       },
-    });
+    } as any);
 
     return total || 0;
   }
