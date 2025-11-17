@@ -1,4 +1,4 @@
-# Example Backend with Node/Express + Sequelize
+# Example Backend with TypeScript, Express & Sequelize
 
 💫 Welcome! 🎉
 
